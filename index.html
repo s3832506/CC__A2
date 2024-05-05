@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Hole Engulfing Galaxy</title>
+<style>
+/* Style guide made up for the main image (black hole)*/
+img {
+      width: 1500px;
+      height:fit-content;
+      border: 1px solid black;
+      transition: all 0.5s ease;
+      border-radius: 50%
+    }
+
+/* A transform effect occurs when user is hovering over image*/
+img:hover {
+      transform: scale(1.1);
+    }
+
+/* This sets images into a particular position, whilst adjusting width and space between images */
+.column {
+  float: right;
+  width: 25.33%;
+  padding: 58px;
+}
+
+ /* When image is hovered over the animation begins, and will last for 10.4 seconds */
+    img:hover {
+      animation: shake 10.4s;
+
+ /* The animation will repeat itself once it has finished */
+      animation-iteration-count: infinite;
+    }
+
+ /* Keyframes showcasing the transform occuring in stages when each image is hovered over */
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(2deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(6deg); }
+      30% { transform: translate(3px, 2px) rotate(10deg); }
+      40% { transform: translate(1px, -1px) rotate(6deg); }
+      50% { transform: translate(-1px, 2px) rotate(-4deg); }
+      60% { transform: translate(-3px, 1px) rotate(10deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(6deg); }
+      90% { transform: translate(1px, 2px) rotate(34deg); }
+      100% { transform: translate(1px, -2px) rotate(-18deg); }
+    }
+
+  </style>
+
+<body>
+
+   <body style="background-color:black;"> 
+
+   
+  <img src="/image/background6.png" id="glitched-image" alt="Black Hole">
+
+  <script>
+    /* Custom class created for glitching image */
+    class GlitchImage {
+      constructor(imageId) {
+        this.image = document.getElementById(imageId);
+        this.originalImageData = null;
+      }
+
+      /* Function that initialises the original image data */
+      initialize() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = this.image.width;
+        canvas.height = this.image.height;
+        context.drawImage(this.image, 0, 0);
+        this.originalImageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      }
+
+      /* Function to help create glitching in the image */
+      glitch(intensity) {
+        if (!this.originalImageData) {
+          this.initialize();
+        }
+
+        let imageData = this.copyImageData(this.originalImageData);
+        imageData = this.applyGlitchEffect(imageData, intensity);
+        this.setImageData(imageData);
+      }
+
+      /* Function that copies the image data */
+      copyImageData(imageData) {
+        return new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
+      }
+
+      /* Function that applies the glitch effect */
+      applyGlitchEffect(imageData, intensity) {
+        const data = imageData.data;
+        const length = data.length;
+        const threshold = 255 * intensity;
+
+        for (let i = 0; i < length; i += 4) {
+          /* Random noise is added to pixel values */
+          if (Math.random() > 0.8) {
+            data[i] = Math.min(data[i] + Math.random() * threshold, 255);
+            data[i + 1] = Math.min(data[i + 1] + Math.random() * threshold, 255);
+            data[i + 2] = Math.min(data[i + 2] + Math.random() * threshold, 255);
+          }
+        }
+
+        return imageData;
+      }
+
+      /* Function to set the image data */
+      setImageData(imageData) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
+        context.putImageData(imageData, 0, 0);
+        this.image.src = canvas.toDataURL();
+      }
+    }
+
+    /* Initialising the glitch image */
+    const glitchedImage = new GlitchImage('glitched-image');
+
+    /* Controls the intensity of glithcing based on the users' movement */
+    document.addEventListener('mousemove', (event) => {
+      const intensity = event.clientX / window.innerWidth; 
+    /* Intensity based on the current position of the users' mouse */
+      glitchedImage.glitch(intensity);
+    });
+
+    /* (Line 139) Class system allows for multiple images to be placed into a row. */
+  </script>
+  
+
+<div class="row">
+   <div class="column">
+     <img src="/image/idea6.png" alt="1st planet" style="width: 75%">
+   </div>
+   <div class="column">
+     <img src="/image/idea4.5.png" alt="2nd planet" style="width:110%">
+   </div>
+   <div class="column">
+     <img src="/image/idea7.png" alt="3rd planets" style="width:40%">
+   </div>
+   <div class="column">
+     <img src="/image/idea8.png" alt="4th planet" style="width:70%">
+   </div>
+ </div> 
+   
+</body>
+
+</html>
